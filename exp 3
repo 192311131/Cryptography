@@ -1,0 +1,39 @@
+import numpy as np
+
+def mod_inverse(a, m):
+    for x in range(1, m):
+        if (a * x) % m == 1:
+            return x
+    return None
+
+def hill_encrypt(message, key):
+    message = message.upper().replace(" ", "")
+    if len(message) % 2 != 0:
+        message += 'X'
+    result = ''
+    for i in range(0, len(message), 2):
+        pair = np.array([[ord(message[i])-65], [ord(message[i+1])-65]])
+        enc = np.dot(key, pair) % 26
+        result += chr(int(enc[0][0]+65)) + chr(int(enc[1][0]+65))
+    return result
+
+def hill_decrypt(cipher, key):
+    det = int(round(np.linalg.det(key)))
+    det_inv = mod_inverse(det % 26, 26)
+    adj = np.round(det * np.linalg.inv(key)).astype(int) % 26
+    key_inv = (det_inv * adj) % 26
+    result = ''
+    for i in range(0, len(cipher), 2):
+        pair = np.array([[ord(cipher[i])-65], [ord(cipher[i+1])-65]])
+        dec = np.dot(key_inv, pair) % 26
+        result += chr(int(dec[0][0]+65)) + chr(int(dec[1][0]+65))
+    return result
+
+message = "HI"
+key = np.array([[3, 3], [2, 5]])
+encrypted = hill_encrypt(message, key)
+decrypted = hill_decrypt(encrypted, key)
+
+print("Original: ", message)
+print("Encrypted:", encrypted)
+print("Decrypted:", decrypted)
