@@ -1,0 +1,77 @@
+# Rail Fence Cipher
+def rail_fence_encrypt(text, key):
+    rail = [''] * key
+    dir_down, row = False, 0
+    for ch in text:
+        rail[row] += ch
+        if row == 0 or row == key-1: dir_down = not dir_down
+        row += 1 if dir_down else -1
+    return ''.join(rail)
+
+def rail_fence_decrypt(cipher, key):
+    rail = [['\n']*len(cipher) for _ in range(key)]
+    dir_down, row, idx = None, 0, 0
+    for i in range(len(cipher)):
+        if row == 0: dir_down = True
+        if row == key-1: dir_down = False
+        rail[row][i] = '*'
+        row += 1 if dir_down else -1
+    for i in range(key):
+        for j in range(len(cipher)):
+            if rail[i][j] == '*' and idx < len(cipher):
+                rail[i][j] = cipher[idx]
+                idx += 1
+    result, row, dir_down = '', 0, None
+    for i in range(len(cipher)):
+        if row == 0: dir_down = True
+        if row == key-1: dir_down = False
+        result += rail[row][i]
+        row += 1 if dir_down else -1
+    return result
+
+# Columnar Transposition Cipher
+def col_trans_encrypt(text, key):
+    col = len(key)
+    filler = col - len(text)%col if len(text)%col!=0 else 0
+    text += 'X'*filler
+    order = sorted(list(enumerate(key)), key=lambda x: x[1])
+    res = ''
+    for pos, _ in order:
+        res += ''.join(text[pos+i*col] for i in range(len(text)//col))
+    return res
+
+def col_trans_decrypt(cipher, key):
+    col = len(key)
+    row = len(cipher)//col
+    order = sorted(list(enumerate(key)), key=lambda x: x[1])
+    table = ['']*col
+    k = 0
+    for pos, _ in order:
+        table[pos] = cipher[k*row:(k+1)*row]
+        k +=1
+    res = ''
+    for i in range(row):
+        for j in range(col):
+            res += table[j][i]
+    return res
+
+# Main
+msg = "HELLO"
+rail_key = 3
+col_key = "3142"
+
+# Rail Fence
+rf_enc = rail_fence_encrypt(msg, rail_key)
+rf_dec = rail_fence_decrypt(rf_enc, rail_key)
+
+# Columnar Transposition
+ct_enc = col_trans_encrypt(msg, col_key)
+ct_dec = col_trans_decrypt(ct_enc, col_key)
+
+print("Rail Fence Cipher:")
+print("Encrypted:", rf_enc)
+print("Decrypted:", rf_dec)
+
+print("\nColumnar Transposition Cipher:")
+print("Encrypted:", ct_enc)
+print("Decrypted:", ct_dec)
