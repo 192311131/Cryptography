@@ -1,0 +1,39 @@
+def prepare_text(text):
+    text = text.upper().replace('J', 'I').replace(" ", "")
+    result = ""
+    i = 0
+    while i < len(text):
+        a = text[i]
+        b = text[i+1] if i+1 < len(text) else 'X'
+        if a == b:
+            result += a + 'X'
+            i += 1
+        else:
+            result += a + b
+            i += 2
+    if len(result) % 2 != 0:
+        result += 'X'
+    return result
+
+def playfair_encrypt(text, key):
+    matrix = ''.join(sorted(set(key.upper() + 'ABCDEFGHIKLMNOPQRSTUVWXYZ'), key=lambda c: (key+ 'ABCDEFGHIKLMNOPQRSTUVWXYZ').index(c)))
+    table = [matrix[i*5:(i+1)*5] for i in range(5)]
+    text = prepare_text(text)
+    result = ""
+    for i in range(0, len(text), 2):
+        a, b = text[i], text[i+1]
+        r1, c1 = [(r, row.index(a)) for r, row in enumerate(table) if a in row][0]
+        r2, c2 = [(r, row.index(b)) for r, row in enumerate(table) if b in row][0]
+        if r1 == r2:
+            result += table[r1][(c1+1)%5] + table[r2][(c2+1)%5]
+        elif c1 == c2:
+            result += table[(r1+1)%5][c1] + table[(r2+1)%5][c2]
+        else:
+            result += table[r1][c2] + table[r2][c1]
+    return result
+
+message = "HELLO"
+key = "MONARCHY"
+encrypted = playfair_encrypt(message, key)
+print("Original:", message)
+print("Encrypted:", encrypted)
