@@ -1,0 +1,30 @@
+def vigenere_encrypt(text, key):
+    text, key = text.upper(), key.upper()
+    result = ''
+    for i in range(len(text)):
+        if text[i].isalpha():
+            shift = ord(key[i % len(key)]) - 65
+            result += chr((ord(text[i]) - 65 + shift) % 26 + 65)
+        else:
+            result += text[i]
+    return result
+
+def vigenere_decrypt(cipher, key):
+    cipher, key = cipher.upper(), key.upper()
+    result = ''
+    for i in range(len(cipher)):
+        if cipher[i].isalpha():
+            shift = ord(key[i % len(key)]) - 65
+            result += chr((ord(cipher[i]) - 65 - shift) % 26 + 65)
+        else:
+            result += cipher[i]
+    return result
+
+message = "HELLO"
+key = "KEY"
+encrypted = vigenere_encrypt(message, key)
+decrypted = vigenere_decrypt(encrypted, key)
+
+print("Original: ", message)
+print("Encrypted:", encrypted)
+print("Decrypted:", decrypted)
