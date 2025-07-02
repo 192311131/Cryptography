@@ -1,0 +1,20 @@
+# RSA small demo
+p, q = 61, 53
+n = p * q            # n = 3233
+phi = (p-1)*(q-1)    # phi = 3120
+e = 17               # public exponent
+d = 2753             # private exponent (precomputed modular inverse)
+
+def encrypt(msg, e, n):
+    return [pow(ord(c), e, n) for c in msg]
+
+def decrypt(cipher, d, n):
+    return ''.join([chr(pow(c, d, n)) for c in cipher])
+
+message = "HI"
+ciphertext = encrypt(message, e, n)
+decrypted = decrypt(ciphertext, d, n)
+
+print("Original :", message)
+print("Encrypted:", ciphertext)
+print("Decrypted:", decrypted)
