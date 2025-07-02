@@ -1,0 +1,31 @@
+# Publicly known prime and primitive root
+p = 23
+g = 5
+
+# Alice's private key
+a = 6
+A = pow(g, a, p)   # Alice's public key
+
+# Bob's private key
+b = 15
+B = pow(g, b, p)   # Bob's public key
+
+# Exchange and compute shared secret
+secret_a = pow(B, a, p)  # Alice computes
+secret_b = pow(A, b, p)  # Bob computes
+
+print("Shared secret (Alice):", secret_a)
+print("Shared secret (Bob):  ", secret_b)
+
+# Use shared secret to encrypt/decrypt a message with simple XOR
+message = "HI"
+key = secret_a     # Both have same secret
+
+# Encrypt
+encrypted = ''.join([chr(ord(c) ^ key) for c in message])
+# Decrypt
+decrypted = ''.join([chr(ord(c) ^ key) for c in encrypted])
+
+print("Original :", message)
+print("Encrypted:", ''.join(format(ord(c), '02x') for c in encrypted))  # show as hex
+print("Decrypted:", decrypted)
