@@ -1,0 +1,17 @@
+import hashlib
+
+message = "HELLO"
+# Compute MD5 hash
+md5_hash = hashlib.md5(message.encode()).hexdigest()
+
+print("Original:", message)
+print("MD5 Hash:", md5_hash)
+
+# Simulate 'decryption' by checking if hashes match
+check_message = "HELLO"
+check_hash = hashlib.md5(check_message.encode()).hexdigest()
+
+if md5_hash == check_hash:
+    print("Hash matches! Message verified.")
+else:
+    print("Hash does not match!")
