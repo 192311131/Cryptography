@@ -1,0 +1,17 @@
+import hashlib
+
+message = "HELLO"
+# Compute SHA-1 hash
+sha1_hash = hashlib.sha1(message.encode()).hexdigest()
+
+print("Original:", message)
+print("SHA-1 Hash:", sha1_hash)
+
+# Simulate 'decryption' by verifying
+check_message = "HELLO"
+check_hash = hashlib.sha1(check_message.encode()).hexdigest()
+
+if sha1_hash == check_hash:
+    print("Hash matches! Message verified.")
+else:
+    print("Hash does not match!")
