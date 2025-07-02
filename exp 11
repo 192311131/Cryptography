@@ -1,0 +1,25 @@
+import hashlib
+
+# Signing (simulate)
+def sign(message, private_key):
+    # Hash + fake "sign": hash value times private_key mod 1000
+    h = int(hashlib.sha1(message.encode()).hexdigest(), 16)
+    signature = (h * private_key) % 1000
+    return signature
+
+# Verification (simulate)
+def verify(message, signature, public_key):
+    h = int(hashlib.sha1(message.encode()).hexdigest(), 16)
+    # Fake verify: signature * public_key mod 1000 should == h mod 1000
+    return (signature * public_key) % 1000 == h % 1000
+
+message = "HELLO"
+private_key = 17
+public_key = 59  # Just a number for simulation
+
+sig = sign(message, private_key)
+valid = verify(message, sig, public_key)
+
+print("Original Message:", message)
+print("Signature:", sig)
+print("Verification:", "Valid" if valid else "Invalid")
